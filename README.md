@@ -1,1 +1,1 @@
- The Payment Gateway uses mysql nodejs in which register.html saves the data into my sql and students.ejs display results after checking all validtion after submit button is clicked by user # jsprojects
+ The Payment Gateway uses mysql nodejs in which register.html saves the data into my sql and students.ejs display results after checking all validtion after submit button is clicked by user and there are 3 currency options if anyone enter usd and aed amound it would convert the amount into pkr by usinf=g forex api # jsprojects
