@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            margin: 10px 0;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        #submitBtn {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        #submitBtn:hover {
+            background-color: #0056b3;
+        }
+        
+    </style>
+
+
+</head>
+<header id="header"> <h1> Payment Gateway</h1>
+<body>
+    
+    <!-- <h1> Payment Gateway</h1> -->
+    <form action="/students" method="post" onsubmit="return onsubmitform()">
+
+
+        <p>Bank Account Number: <input type="text" name="account_number"  id= "account_number" required placeholder="Enter account number"></p>
+        <p>Bank Name: 
+            <select name="bank_name" id="bank_name" class="bank_name">
+                <option value="">--Select Bank</option>
+                <option value="Bank Alfalah">Bank Alfalah</option>
+                <option value="Bank Al-habib">Bank Al-habib</option>
+            </select>
+        </p>
+        
+        <p>cnic: <input type="text" name="cnic" id="cnic" required placeholder="Enter CNIC" ></p>
+        <fieldset>
+            <legend>Currency</legend>
+            <p>
+                PK: <input type="radio" name="currency" id="currency"  value="PK">
+                USD: <input type="radio" name="currency"  id="currency" value="USD">
+                AED: <input type="radio" name="currency"  id="currency" value="AED">
+            </p>
+        </fieldset>
+        <p>Amount: <input type="number" name="amount" id="amount" required placeholder="Enter Amount"></p>
+        <p>Email: <input type="text" name="email" id="email" required placeholder="Enter Email"></p>
+        <p>Mobile Number: <input type="text" name="mobile" id="mobile" required placeholder="Enter Mobile Number"></p>
+        <div><p> 
+            <input type="submit" name="submit"  id="submitBtn" value="Submit">
+        </p></div>
+    </form>
+    <script>
+        function validateForm() {
+            const cnicPattern = /^\d{5}-\d{7}-\d{1}$/;
+            const cnicInput = document.getElementById("cnic");
+
+            if (!cnicPattern.test(cnicInput.value)) {
+                alert("Invalid CNIC format. Please use the format: xxxxx-xxxxxxx-x");
+                cnicInput.focus();
+                return false;
+            }
+            if (isNaN(amount) && amount < 0) {
+                amountInput.focus();
+                return false;
+            }
+        
+            return true;
+        }
+    function onsubmitform() {
+        var account_number = document.getElementById('account_number').value;
+        
+        // Get the selected bank name from the dropdown
+        var bankSelect = document.getElementById('bank_name');
+        var bank_name = bankSelect.options[bankSelect.selectedIndex].value;
+        
+        var cnic = document.getElementById('cnic').value;
+        
+        // Get the selected currency from the radio buttons
+        var currencyRadios = document.getElementsByName('currency');
+        var currency;
+        for (var i = 0; i < currencyRadios.length; i++) {
+            if (currencyRadios[i].checked) {
+                currency = currencyRadios[i].value;
+                break;
+            }
+        }
+        
+        var amount = document.getElementById('amount').value;
+        var email = document.getElementById('email').value;
+        var mobile = document.getElementById('mobile').value;
+
+        var req = new XMLHttpRequest();
+        req.open('POST', '/');
+        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        req.send("account_number=" + account_number + "&bank_name=" + bank_name + "&cnic=" + cnic + "&currency=" + currency + "&amount=" + amount + "&email=" + email + "&mobile=" + mobile);
+
+        req.onreadystatechange = function () {
+            if (req.readyState == 4 && req.status == 200) {
+                alert(req.responseText);
+            }
+        }
+
+        return validateForm();
+    }
+</script>
+
+</body>
+</header>
+</html>

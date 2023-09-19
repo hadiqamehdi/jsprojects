@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Data Sheet</h1>
+    <table border="1">
+        <tr>
+            <th>Transaction Number</th>
+            <th>Account Number</th>
+            <th>Bank Name</th>
+            <th>CNIC</th>
+            <th>Currency</th>
+            <th>Amount</th>
+            <th>Email</th>
+            <th>Mobile</th>
+        </tr>
+        <% if (students.length > 0) { %>
+            <% for (var i = 0; i < students.length; i++) { %>
+                <tr>
+                    <td><%- students[i].random5DigitNumber %></td>
+                    <td><%- students[i].account_number %></td>
+                    <td><%- students[i].bank_name %></td>
+                    <td><%- students[i].cnic %></td>
+                    <td><%- students[i].currency %></td>
+                    <td><%- students[i].amount %></td>
+                    <td><%- students[i].email %></td>
+                    <td><%- students[i].mobile %></td>
+                </tr>
+            <% } %>
+        <% } else { %>
+            <tr>
+                <td colspan="8">Data not found</td>
+            </tr>
+        <% } %>
+    </table>
+</body>
+</html>
