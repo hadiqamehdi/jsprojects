@@ -1,13 +1,16 @@
 const con = require('./one');
 const express = require('express');
 const app = express();
+// const app2nd = express();
 const path = require('path');
 const bodyParser = require('body-parser');
 const axios = require('axios');
-
+ process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
+// const axios = require('axios');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
+
 
 function generateRandom5DigitNumber() {
     const min = 10000; // Minimum 5-digit number (inclusive)
@@ -19,12 +22,12 @@ function generateRandom5DigitNumber() {
 
 // Establish the database connection (assuming you have the code for con.connect here)
 
-app.get('/', function (req, res) {
+app.get('/payment', function (req, res) {
     res.sendFile(path.join(__dirname, 'register.html'));
 });
 
 // Handle the form submission
-app.post('/', function (req, res) {
+app.post('/payment', function (req, res) {
     var random5DigitNumber = generateRandom5DigitNumber();
     var account_number = req.body.account_number;
     var bank_name = req.body.bank_name;
@@ -44,15 +47,14 @@ app.post('/', function (req, res) {
     };
     const apiUrl = `https://api.apilayer.com/exchangerates_data/convert?to=pkr&from=${currency}&amount=${amount}`;
     
-    // Check if the currency is USD or AED
+    // Check  currency is USD or AED
     if (currency === 'USD' || currency === 'AED') {
-        // Make an API request to convert the amount to PKR
         axios.get(apiUrl, requestOptions)
         .then(response => {
             currency='PKR'
             const pkrAmount = response.data.result; // PKR amount from the API response
                     
-            // Rest of your code for database insertion and response handling
+           
             var sql = 'INSERT INTO data (random5DigitNumber, account_number, bank_name, cnic, currency, amount, email, mobile) VALUES ?';
             var values = [
                 [random5DigitNumber.toString(), account_number, bank_name, cnic, currency, pkrAmount, email, mobile]
@@ -60,16 +62,17 @@ app.post('/', function (req, res) {
         
             con.query(sql, [values], function (error, result) {
                 if (error) {
-                    console.error(error);
-                    res.send("Error inserting data into the database.");
+                    res.status(505).render('505',{title:' 505 unsupported condition'})
+                    // res.send("Error inserting data into the database.");
                 } else {
                     console.log("Data inserted successfully");
-                    res.redirect('/students'); // Redirect to the route to retrieve and display the data
+                    res.status(200).render('200') 
                 }
             });
         })
         .catch(error => {
             console.error('API Error:', error);
+            res.status(500).render('')
             res.send("Error converting amount to PKR.");
         });
     } else {
@@ -78,22 +81,13 @@ app.post('/', function (req, res) {
     }
 });
 
-// Define the '/students' route to retrieve data from the database
-
-app.post('/students', function (req, res) {
-    var cnic = req.body.cnic;
-
-    var sql = 'SELECT * FROM hadiqa.data where cnic=?';
-    con.query(sql, [cnic], function (error, result) {
-        if (error) {
-            console.error(error);
-            res.status(500).send("Error querying the database.");
-        } else {
-            res.render('students', { students: result });
-        }
-    });
+// // app.post('/success',function(req,res){
+//     // res.send("payment successful, thamkyou")
+// })
+app.get("*", (req, res) => {
+    res.render('404', { title: '404 Not Found' });
+});
+app.listen(7002, function () {
+    console.log('Server for root path is running on port 7002');
 });
 
-app.listen(7000, function () {
-    console.log('Server is running on port 7000');
-});
